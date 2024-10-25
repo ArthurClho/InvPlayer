@@ -1,14 +1,18 @@
 using Soup;
+using Mpv;
 
 public class SearchResult : Gtk.Grid {
     private Gtk.Image image;
+    public string video_id;
 
-    public SearchResult (string title, string thumb_url) {
+    public SearchResult (string title, string thumb_url, string video_id) {
         this.insert_column(0);
         this.attach (new Gtk.Label (title), 1, 0);
 
         show_all ();
         load_thumbnail.begin(thumb_url);
+
+        this.video_id = video_id;
     }
 
     async void load_thumbnail(string thumb_url) {
@@ -31,12 +35,37 @@ public class ApplicationWindow : Gtk.ApplicationWindow {
     private unowned Gtk.SearchEntry search_entry;
     [GtkChild]
     private unowned Gtk.ListBox result_list;
+    [GtkChild]
+    private unowned Gtk.Box root_box;
+    private VideoPlayer video_player;
 
     public ApplicationWindow ( Gtk.Application app ) {
         Object ( application: app );
 
         this.search_entry.activate.connect (() => {
+            video_player.init();
             this.do_search.begin (this.search_entry.get_text ());
+        });
+
+        video_player = new VideoPlayer();
+        root_box.pack_end (video_player);
+
+        realize.connect(() => {
+            video_player.init();
+        });
+
+        result_list.row_activated.connect((row) => {
+            if (row == null) {
+                print ("Row is null\n");
+                return;
+            }
+            
+            var sr = row.get_child() as SearchResult;
+            if (sr == null) {
+                print ("sr is null\n");
+                return;
+            }
+            video_player.play("https://youtube.com/watch?v=" + sr.video_id);
         });
     }
 
@@ -123,8 +152,10 @@ public class ApplicationWindow : Gtk.ApplicationWindow {
                         break;
                     }
                 }
+
+                var video_id = obj.get_string_member ("videoId");
                 
-                this.result_list.insert(new SearchResult (title_string, thumb_url), -1);
+                this.result_list.insert(new SearchResult (title_string, thumb_url, video_id), -1);
             }
         });
     }

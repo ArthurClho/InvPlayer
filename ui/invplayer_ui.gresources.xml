@@ -2,5 +2,6 @@
 <gresources>
   <gresource prefix="/net/arthurclho/invplayer/ui">
     <file>application-window.ui</file>
+    <file>video-player.ui</file>
   </gresource>
 </gresources>
