@@ -40,55 +40,6 @@
             <property name="can-focus">False</property>
             <property name="transition-type">crossfade</property>
             <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="orientation">vertical</property>
-                <child>
-                  <object class="GtkSearchEntry" id="search_entry">
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="primary-icon-name">edit-find-symbolic</property>
-                    <property name="primary-icon-activatable">False</property>
-                    <property name="primary-icon-sensitive">False</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkScrolledWindow">
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="shadow-type">in</property>
-                    <child>
-                      <object class="GtkViewport">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <child>
-                          <object class="GtkListBox" id="result_list">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="name">page0</property>
-                <property name="title" translatable="yes">Search</property>
-              </packing>
-            </child>
-            <child>
               <object class="VideoPlayer" id="video_player">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
@@ -98,9 +49,22 @@
                 </child>
               </object>
               <packing>
-                <property name="name">page1</property>
-                <property name="title" translatable="yes">page1</property>
-                <property name="icon-name">Player</property>
+                <property name="name">Player</property>
+                <property name="title" translatable="yes">Player</property>
+              </packing>
+            </child>
+            <child>
+              <object class="SearchPage" id="search_page">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="name">Search</property>
+                <property name="title" translatable="yes">Search</property>
                 <property name="position">1</property>
               </packing>
             </child>

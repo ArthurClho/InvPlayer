@@ -1,14 +1,12 @@
 [GtkTemplate ( ui = "/net/arthurclho/invplayer/ui/video-player.ui" )]
 public class VideoPlayer : Gtk.Box {
-    [GtkChild]
-    private unowned Gtk.GLArea gl_area;
+    private Gtk.GLArea gl_area;
 
     private Mpv.Context? mpv_ctx = null;
     private MpvRender.Context *render_context;
 
     private int gl_width;
     private int gl_height;
-    private bool initialized = false;
 
     static void *get_proc_address(void *ctx, string name) {
         // TODO: Check if wayland
@@ -27,7 +25,15 @@ public class VideoPlayer : Gtk.Box {
     public signal void frame_ready();
 
     public void init() {
-        initialized = true;
+        /*
+         * We create this here instead of having it in the .ui file because,
+         * for some reason I haven't been able to debug yet, it doesn't work
+         * when it's done like that
+        */
+        gl_area = new Gtk.GLArea ();
+        pack_end(gl_area);
+        gl_area.show();
+
         GLib.Intl.setlocale (GLib.LocaleCategory.NUMERIC, "C");
 
         mpv_ctx = new Mpv.Context();
@@ -90,10 +96,6 @@ public class VideoPlayer : Gtk.Box {
     }
 
     public void play(string name) {
-        if (!initialized) {
-            init();
-        }
-
         string[] cmd = { "loadfile", name };
         mpv_ctx.command(cmd);
     }
