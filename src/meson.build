@@ -8,16 +8,7 @@ vala_sources = [
   '../vapi/mpv.vapi',
 ]
 
-dependencies = [
-  gtk,
-  soup,
-  json,
-  mpv
-]
-
 executable('invplayer', vala_sources,
   gresources_ui,
-  dependencies: dependencies,
-  vala_args: ['--vapidir', meson.current_source_dir()],
-  link_args: ['-lepoxy']
+  dependencies: dependencies
 )

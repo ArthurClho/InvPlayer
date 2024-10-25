@@ -1,15 +1,3 @@
-[CCode (cheader_filename = "epoxy/gl.h")]
-namespace EpoxyGL {
-    [CCode (cname="glGetIntegerv")]
-    void GetIntegerv(int enum, void *data);
-}
-
-[CCode (cheader_filename = "epoxy/glx.h")]
-namespace EpoxyGLX {
-    [CCode (cname="glXGetProcAddress")]
-    public void* get_proc_address(string name);
-}
-
 [CCode (cheader_filename = "mpv/render_gl.h")]
 namespace MpvOpenGL {
     [CCode (has_target = false)]

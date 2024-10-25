@@ -1,5 +1,3 @@
-using Mpv;
-
 [GtkTemplate ( ui = "/net/arthurclho/invplayer/ui/video-player.ui" )]
 public class VideoPlayer : Gtk.Box {
     [GtkChild]
@@ -14,7 +12,7 @@ public class VideoPlayer : Gtk.Box {
 
     static void *get_proc_address(void *ctx, string name) {
         // TODO: Check if wayland
-        return EpoxyGLX.get_proc_address(name);
+        return GLX.get_proc_address(name);
     }
 
     static void wakeup_callback(void *userdata) {
@@ -51,7 +49,7 @@ public class VideoPlayer : Gtk.Box {
         gl_area.render.connect(() => {
             if (render_context != null) {
                 int fbo = -1;
-                EpoxyGL.GetIntegerv(0x8CA6, &fbo);
+                GL.GetIntegerv(GL.FRAMEBUFFER_BINDING, &fbo);
 
                 int t = 1;
                 MpvOpenGL.Fbo mpv_fbo = { fbo, gl_width, gl_height, 0 };
