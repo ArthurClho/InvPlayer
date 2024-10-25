@@ -11,5 +11,10 @@ soup = dependency('libsoup-2.4')
 json = dependency('json-glib-1.0')
 mpv = dependency('mpv')
 
+add_project_arguments(
+  ['--vapidir', meson.current_source_dir() + '/vapi'],
+  language : 'vala'
+)
+
 subdir('ui')
 subdir('src')
