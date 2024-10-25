@@ -3,7 +3,7 @@ public class VideoPlayer : Gtk.Box {
     [GtkChild]
     private unowned Gtk.GLArea gl_area;
 
-    private Mpv.Context mpv_ctx;
+    private Mpv.Context? mpv_ctx = null;
     private MpvRender.Context *render_context;
 
     private int gl_width;
@@ -26,7 +26,8 @@ public class VideoPlayer : Gtk.Box {
 
     public signal void frame_ready();
 
-    public VideoPlayer() {
+    public void init() {
+        initialized = true;
         GLib.Intl.setlocale (GLib.LocaleCategory.NUMERIC, "C");
 
         mpv_ctx = new Mpv.Context();
@@ -68,14 +69,6 @@ public class VideoPlayer : Gtk.Box {
             gl_width = width;
             gl_height = height;
         });
-    }
-
-    public void init() {
-        if (initialized) {
-            return;
-        } else {
-            initialized = true;
-        }
 
         gl_area.realize ();
         gl_area.make_current ();
@@ -97,6 +90,10 @@ public class VideoPlayer : Gtk.Box {
     }
 
     public void play(string name) {
+        if (!initialized) {
+            init();
+        }
+
         string[] cmd = { "loadfile", name };
         mpv_ctx.command(cmd);
     }

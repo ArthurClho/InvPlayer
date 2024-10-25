@@ -37,21 +37,16 @@ public class ApplicationWindow : Gtk.ApplicationWindow {
     private unowned Gtk.ListBox result_list;
     [GtkChild]
     private unowned Gtk.Box root_box;
-    private VideoPlayer video_player;
+    [GtkChild]
+    private unowned Gtk.Stack the_stack;
+    [GtkChild]
+    private unowned VideoPlayer video_player;
 
     public ApplicationWindow ( Gtk.Application app ) {
         Object ( application: app );
 
         this.search_entry.activate.connect (() => {
-            video_player.init();
             this.do_search.begin (this.search_entry.get_text ());
-        });
-
-        video_player = new VideoPlayer();
-        root_box.pack_end (video_player);
-
-        realize.connect(() => {
-            video_player.init();
         });
 
         result_list.row_activated.connect((row) => {
