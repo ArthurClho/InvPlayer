@@ -1,6 +1,3 @@
-using Soup;
-using Mpv;
-
 public class SearchResult : Gtk.Grid {
     private Gtk.Image image;
     public string video_id;
@@ -35,10 +32,6 @@ public class ApplicationWindow : Gtk.ApplicationWindow {
     private unowned Gtk.SearchEntry search_entry;
     [GtkChild]
     private unowned Gtk.ListBox result_list;
-    [GtkChild]
-    private unowned Gtk.Box root_box;
-    [GtkChild]
-    private unowned Gtk.Stack the_stack;
     [GtkChild]
     private unowned VideoPlayer video_player;
 
@@ -158,8 +151,6 @@ public class ApplicationWindow : Gtk.ApplicationWindow {
 
 public class Application : Gtk.Application {
     private Gtk.ApplicationWindow window;
-
-    private Gtk.ListBox list;
 
     public Application () {
         Object (application_id: "com.example.GtkApplication", flags: GLib.ApplicationFlags.DEFAULT_FLAGS);
