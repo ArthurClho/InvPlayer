@@ -37,6 +37,9 @@ class SearchPage : Gtk.Box {
 
     [GtkCallback]
     void on_search_entry_activate() {
+        foreach (var item in result_list.get_children()) {
+            result_list.remove(item);
+        }
         do_search.begin(search_entry.get_text ());
     }
 
