@@ -4,11 +4,14 @@ public class ApplicationWindow : Gtk.ApplicationWindow {
     private unowned VideoPlayer video_player;
     [GtkChild]
     private unowned SearchPage search_page;
+    [GtkChild]
+    private unowned Gtk.Stack the_stack;
 
     public ApplicationWindow ( Gtk.Application app ) {
         Object ( application: app );
 
         search_page.video_chosen.connect((id) => {
+            the_stack.set_visible_child (video_player);
             video_player.play("https://youtube.com/watch?v=" + id);
         });
 
