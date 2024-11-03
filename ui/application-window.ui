@@ -43,7 +43,6 @@
               <object class="VideoPlayer" id="video_player">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="orientation">vertical</property>
                 <child>
                   <placeholder/>
                 </child>

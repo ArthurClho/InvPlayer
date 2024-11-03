@@ -4,5 +4,7 @@
     <file>application-window.ui</file>
     <file>search-page.ui</file>
     <file>video-player.ui</file>
+    <file>video-controls.ui</file>
+    <file>video-controls.css</file>
   </gresource>
 </gresources>

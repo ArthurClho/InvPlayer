@@ -1,5 +1,18 @@
+[GtkTemplate ( ui = "/net/arthurclho/invplayer/ui/video-controls.ui" )]
+public class VideoControls : Gtk.Grid {
+    [GtkChild]
+    private unowned Gtk.Scale slider;
+
+    public VideoControls() {
+        halign = Gtk.Align.FILL;
+        valign = Gtk.Align.END;
+
+        slider.set_range(0.0, 1.0);
+    }
+}
+
 [GtkTemplate ( ui = "/net/arthurclho/invplayer/ui/video-player.ui" )]
-public class VideoPlayer : Gtk.Box {
+public class VideoPlayer : Gtk.Overlay {
     private Gtk.GLArea gl_area;
 
     private Mpv.Context? mpv_ctx = null;
@@ -25,14 +38,20 @@ public class VideoPlayer : Gtk.Box {
     public signal void frame_ready();
 
     public void init() {
+    
         /*
          * We create this here instead of having it in the .ui file because,
          * for some reason I haven't been able to debug yet, it doesn't work
          * when it's done like that
         */
         gl_area = new Gtk.GLArea ();
-        pack_end(gl_area);
+        add(gl_area);
         gl_area.show();
+
+        var controls = new VideoControls();
+        controls.get_style_context().add_class("videocontrols");
+        controls.show();
+        add_overlay(controls);
 
         GLib.Intl.setlocale (GLib.LocaleCategory.NUMERIC, "C");
 
