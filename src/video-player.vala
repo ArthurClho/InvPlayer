@@ -101,7 +101,11 @@ public class VideoPlayer : Gtk.Overlay {
         // TODO should not be hardcoded
         mpv_ctx.set_option_string("ytdl-format", "best[height<=720]");
 
-        mpv_ctx.request_log_messages("debug");
+        var log_request = GLib.Environment.get_variable("INVPLAYER_MPV_DEBUG");
+        if (log_request != null) {
+            mpv_ctx.request_log_messages(log_request);
+        }
+
         if (mpv_ctx.initialize() < 0) {
             print ("Error initializing mpv\n");
         }
