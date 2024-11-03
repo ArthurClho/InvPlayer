@@ -321,6 +321,8 @@ namespace Mpv {
 
         public int set_option(string name, Format format, void *data);
 
+        public int set_property(string name, Format format, void *data);
+
         public int initialize();
 
         public int command([CCode (array_length = false)] string[] command);
