@@ -3,11 +3,18 @@ public class VideoControls : Gtk.Grid {
     [GtkChild]
     private unowned Gtk.Scale slider;
 
+    public signal void play_pause_pressed(bool pause);
+
     public VideoControls() {
         halign = Gtk.Align.FILL;
         valign = Gtk.Align.END;
 
         slider.set_range(0.0, 1.0);
+    }
+
+    [GtkCallback]
+    void play_pause_button_clicked() {
+        play_pause_pressed(true);
     }
 }
 
@@ -76,6 +83,10 @@ public class VideoPlayer : Gtk.Overlay {
         controls.get_style_context().add_class("videocontrols");
         controls.show();
         add_overlay(controls);
+
+        controls.play_pause_pressed.connect((paused) => {
+            mpv_ctx.set_property("pause", Mpv.Format.FLAG, &paused);
+        });
 
         GLib.Intl.setlocale (GLib.LocaleCategory.NUMERIC, "C");
 
