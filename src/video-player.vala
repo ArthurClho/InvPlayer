@@ -27,7 +27,8 @@ public class VideoPlayer : Gtk.Overlay {
     }
 
     static void wakeup_callback(void *userdata) {
-        print ("wakeup\n");
+        var self = (VideoPlayer *) userdata;
+        self->handle_mpv_events();
     }
 
     static void update_callback(void *userdata) {
@@ -35,7 +36,23 @@ public class VideoPlayer : Gtk.Overlay {
         self->frame_ready();
     }
 
-    public signal void frame_ready();
+    signal void frame_ready();
+
+    signal void handle_mpv_events() {
+        while (true) {
+            var event = mpv_ctx.wait_event(0.0);
+
+            if (event.event_id == Mpv.EventID.NONE) {
+                break;
+            }
+
+            switch (event.event_id) {
+                default:
+                    print ("Unhandled mpv event: %d\n", event.event_id);
+                    break;
+            }
+        }
+    }
 
     public void init() {
         /*
@@ -112,7 +129,7 @@ public class VideoPlayer : Gtk.Overlay {
             print ("Error creating render context\n");
         }
 
-        mpv_ctx.set_wakeup_callback(wakeup_callback, null);
+        mpv_ctx.set_wakeup_callback(wakeup_callback, this);
         render_context->set_update_callback(update_callback, this);
     }
 
