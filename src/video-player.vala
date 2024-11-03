@@ -38,7 +38,6 @@ public class VideoPlayer : Gtk.Overlay {
     public signal void frame_ready();
 
     public void init() {
-    
         /*
          * We create this here instead of having it in the .ui file because,
          * for some reason I haven't been able to debug yet, it doesn't work
@@ -62,6 +61,9 @@ public class VideoPlayer : Gtk.Overlay {
         }
 
         mpv_ctx.set_option_string("terminal", "yes");
+
+        // TODO should not be hardcoded
+        mpv_ctx.set_option_string("ytdl-format", "best[height<=720]");
 
         mpv_ctx.request_log_messages("debug");
         if (mpv_ctx.initialize() < 0) {
