@@ -28,7 +28,11 @@ public class VideoPlayer : Gtk.Overlay {
 
     static void wakeup_callback(void *userdata) {
         var self = (VideoPlayer *) userdata;
-        self->handle_mpv_events();
+
+        GLib.Idle.add_full(GLib.Priority.HIGH_IDLE, () => {
+            self->handle_mpv_events();
+            return false;
+        });
     }
 
     static void update_callback(void *userdata) {
@@ -38,7 +42,7 @@ public class VideoPlayer : Gtk.Overlay {
 
     signal void frame_ready();
 
-    signal void handle_mpv_events() {
+    void handle_mpv_events() {
         while (true) {
             var event = mpv_ctx.wait_event(0.0);
 
