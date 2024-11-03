@@ -47,6 +47,10 @@ public class VideoPlayer : Gtk.Overlay {
             }
 
             switch (event.event_id) {
+                case Mpv.EventID.LOG_MESSAGE:
+                    var msg = (Mpv.LogMessage *) event.data;
+                    print ("%s [%s] %s", msg.prefix, msg.level, msg.text);
+                    break;
                 default:
                     print ("Unhandled mpv event: %d\n", event.event_id);
                     break;
