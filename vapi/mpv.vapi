@@ -462,6 +462,27 @@ namespace Mpv {
         HOOK              = 25,
     }
 
+    [CCode (cname = "mpv_log_level", cprefix="MPV_LOG_LEVEL_")]
+    public enum LogLevel {
+        NONE  = 0,    /// "no"    - disable absolutely all messages
+        FATAL = 10,   /// "fatal" - critical/aborting errors
+        ERROR = 20,   /// "error" - simple errors
+        WARN  = 30,   /// "warn"  - possible problems
+        INFO  = 40,   /// "info"  - informational message
+        V     = 50,   /// "v"     - noisy informational message
+        DEBUG = 60,   /// "debug" - very noisy technical information
+        TRACE = 70,   /// "trace" - extremely noisy
+    }
+
+    [CCode (cname = "mpv_event_log_message")]
+    [SimpleType]
+    public struct LogMessage {
+        unowned string prefix;
+        unowned string level;
+        unowned string text;
+        LogLevel log_level;
+    }
+
     [CCode (cname = "mpv_event")]
     [SimpleType]
     public struct Event {
