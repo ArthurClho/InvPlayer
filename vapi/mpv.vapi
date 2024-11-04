@@ -332,6 +332,8 @@ namespace Mpv {
         public int request_log_messages(string level);
 
         public void set_wakeup_callback(WakeupCallbackFunc callback, void* userdata);
+
+        public int observe_property(uint64 userdata, string name, Format format);
     }
 
     [CCode (cprefix = "MPV_EVENT_")]
@@ -483,6 +485,14 @@ namespace Mpv {
         unowned string level;
         unowned string text;
         LogLevel log_level;
+    }
+
+    [CCode (cname = "mpv_event_property")]
+    [SimpleType]
+    public struct PropertyEvent {
+        unowned string name;
+        Format format;
+        void *data;
     }
 
     [CCode (cname = "mpv_event")]
