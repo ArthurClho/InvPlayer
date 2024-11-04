@@ -2,14 +2,39 @@
 public class VideoControls : Gtk.Grid {
     [GtkChild]
     private unowned Gtk.Scale slider;
+    [GtkChild]
+    private unowned Gtk.Button play_pause_button;
 
     public signal void play_pause_pressed(bool pause);
+
+    private bool _playing = false;
+    public bool playing {
+        get { return _playing; }
+        set {
+            _playing = value;
+            update_play_button();
+        }
+    }
 
     public VideoControls() {
         halign = Gtk.Align.FILL;
         valign = Gtk.Align.END;
 
         slider.set_range(0.0, 1.0);
+
+        update_play_button();
+    }
+
+    void update_play_button() {
+        string icon_name;
+        if (_playing) {
+            icon_name = "media-playback-pause-symbolic";
+        } else {
+            icon_name = "media-playback-start-symbolic";
+        }
+
+        var img = new Gtk.Image.from_icon_name(icon_name, Gtk.IconSize.BUTTON);
+        play_pause_button.set_image (img);
     }
 
     [GtkCallback]
