@@ -46,6 +46,7 @@ public class VideoControls : Gtk.Grid {
 [GtkTemplate ( ui = "/net/arthurclho/invplayer/ui/video-player.ui" )]
 public class VideoPlayer : Gtk.Overlay {
     private Gtk.GLArea gl_area;
+    private VideoControls video_controls;
 
     private Mpv.Context? mpv_ctx = null;
     private MpvRender.Context *render_context;
@@ -74,6 +75,19 @@ public class VideoPlayer : Gtk.Overlay {
 
     signal void frame_ready();
 
+    void handle_mpv_property_change(Mpv.PropertyEvent *event) {
+        switch (event.name) {
+            case "pause":
+                var paused = *((bool*) event.data);
+                print ("pause %b\n", paused);
+                video_controls.playing = !paused;
+                break;
+            default:
+                print ("Unhandled mpv property change: '%s'\n", event.name);
+                break;
+        }
+    }
+
     void handle_mpv_events() {
         while (true) {
             var event = mpv_ctx.wait_event(0.0);
@@ -86,6 +100,9 @@ public class VideoPlayer : Gtk.Overlay {
                 case Mpv.EventID.LOG_MESSAGE:
                     var msg = (Mpv.LogMessage *) event.data;
                     print ("%s [%s] %s", msg.prefix, msg.level, msg.text);
+                    break;
+                case Mpv.EventID.PROPERTY_CHANGE:
+                    handle_mpv_property_change((Mpv.PropertyEvent*) event.data);
                     break;
                 case Mpv.EventID.IDLE:
                     /* ignored */
@@ -107,12 +124,12 @@ public class VideoPlayer : Gtk.Overlay {
         add(gl_area);
         gl_area.show();
 
-        var controls = new VideoControls();
-        controls.get_style_context().add_class("videocontrols");
-        controls.show();
-        add_overlay(controls);
+        video_controls = new VideoControls();
+        video_controls.get_style_context().add_class("videocontrols");
+        video_controls.show();
+        add_overlay(video_controls);
 
-        controls.play_pause_pressed.connect((paused) => {
+        video_controls.play_pause_pressed.connect((paused) => {
             mpv_ctx.set_property("pause", Mpv.Format.FLAG, &paused);
         });
 
@@ -182,6 +199,8 @@ public class VideoPlayer : Gtk.Overlay {
 
         mpv_ctx.set_wakeup_callback(wakeup_callback, this);
         render_context->set_update_callback(update_callback, this);
+
+        mpv_ctx.observe_property (0, "pause", Mpv.Format.FLAG);
     }
 
     public void play(string name) {
