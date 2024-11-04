@@ -39,7 +39,7 @@ public class VideoControls : Gtk.Grid {
 
     [GtkCallback]
     void play_pause_button_clicked() {
-        play_pause_pressed(true);
+        play_pause_pressed(_playing);
     }
 }
 
@@ -79,7 +79,6 @@ public class VideoPlayer : Gtk.Overlay {
         switch (event.name) {
             case "pause":
                 var paused = *((bool*) event.data);
-                print ("pause %b\n", paused);
                 video_controls.playing = !paused;
                 break;
             default:
