@@ -18,9 +18,9 @@
         <property name="draw-value">False</property>
       </object>
       <packing>
-        <property name="left-attach">0</property>
+        <property name="left-attach">1</property>
         <property name="top-attach">0</property>
-        <property name="width">9</property>
+        <property name="width">7</property>
       </packing>
     </child>
     <child>
@@ -144,6 +144,28 @@ audio-volume-medium-symbolic</property>
       <packing>
         <property name="left-attach">2</property>
         <property name="top-attach">1</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="time_played_label">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="label" translatable="yes">label</property>
+      </object>
+      <packing>
+        <property name="left-attach">0</property>
+        <property name="top-attach">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="duration_label">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="label" translatable="yes">label</property>
+      </object>
+      <packing>
+        <property name="left-attach">8</property>
+        <property name="top-attach">0</property>
       </packing>
     </child>
     <child>

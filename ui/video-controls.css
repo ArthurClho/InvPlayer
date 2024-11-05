@@ -3,20 +3,12 @@
   margin: 20px;
   border-radius: 5px;
   padding: 5px;
+  color: white;
 }
 
 .videocontrols button {
   background: transparent;
-  color: white;
   border: none;
+  color: white;
   box-shadow: none;
-}
-
-.videocontrols scale contents {
-  border-radius: 0;
-}
-
-.videocontrols scale contents trough highlight {
-  border-color: red;
-  background: red;
 }

@@ -4,6 +4,10 @@ public class VideoControls : Gtk.Grid {
     private unowned Gtk.Scale slider;
     [GtkChild]
     private unowned Gtk.Button play_pause_button;
+    [GtkChild]
+    private unowned Gtk.Label duration_label;
+    [GtkChild]
+    private unowned Gtk.Label time_played_label;
 
     public signal void play_pause_pressed(bool pause);
 
@@ -16,6 +20,15 @@ public class VideoControls : Gtk.Grid {
         }
     }
 
+    private double _duration;
+    public double duration {
+        get { return _duration; }
+        set {
+            _duration = value;
+            update_times();
+        }
+    }
+
     public VideoControls() {
         halign = Gtk.Align.FILL;
         valign = Gtk.Align.END;
@@ -23,6 +36,19 @@ public class VideoControls : Gtk.Grid {
         slider.set_range(0.0, 1.0);
 
         update_play_button();
+    }
+
+    void update_times() {
+        var datetime = new GLib.DateTime.from_unix_utc((int64) Math.floor(_duration));
+
+        string duration_string;
+        if (datetime.to_unix() >= 60 * 60) {
+            duration_string = datetime.format("%T");
+        } else {
+            duration_string = datetime.format("%M:%S");
+        }
+        
+        duration_label.set_text(duration_string);
     }
 
     void update_play_button() {
@@ -76,10 +102,19 @@ public class VideoPlayer : Gtk.Overlay {
     signal void frame_ready();
 
     void handle_mpv_property_change(Mpv.PropertyEvent *event) {
+        if (event.format == Mpv.Format.NONE) {
+            print ("handle_mpv_event ERROR: format is NONE\n");
+            return;
+        }
+    
         switch (event.name) {
             case "pause":
                 var paused = *((bool*) event.data);
                 video_controls.playing = !paused;
+                break;
+            case "duration":
+                var duration = (double*) event.data;
+                video_controls.duration = *duration;
                 break;
             default:
                 print ("Unhandled mpv property change: '%s'\n", event.name);
@@ -200,6 +235,7 @@ public class VideoPlayer : Gtk.Overlay {
         render_context->set_update_callback(update_callback, this);
 
         mpv_ctx.observe_property (0, "pause", Mpv.Format.FLAG);
+        mpv_ctx.observe_property (0, "duration", Mpv.Format.DOUBLE);
     }
 
     public void play(string name) {

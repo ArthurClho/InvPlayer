@@ -301,7 +301,9 @@ namespace MpvRender {
 [CCode (cheader_filename = "mpv/client.h")]
 namespace Mpv {
     public enum Format {
+        NONE = 0,
         FLAG = 3,
+        DOUBLE = 5,
     }
 
     [CCode (has_target = false)]
