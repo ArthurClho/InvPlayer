@@ -29,26 +29,45 @@ public class VideoControls : Gtk.Grid {
         }
     }
 
+    private double _time_pos;
+    public double time_pos {
+        get { return _time_pos; }
+        set {
+            _time_pos = value;
+            update_times();
+        }
+    }
+
     public VideoControls() {
         halign = Gtk.Align.FILL;
         valign = Gtk.Align.END;
 
+        duration = 0.0;
+        time_pos = 0.0;
+
         slider.set_range(0.0, 1.0);
+        // Leave it disabled until I implement seeking
+        slider.sensitive = false;
 
         update_play_button();
     }
 
-    void update_times() {
-        var datetime = new GLib.DateTime.from_unix_utc((int64) Math.floor(_duration));
-
+    static void set_label_time(Gtk.Label label, GLib.DateTime datetime) {
         string duration_string;
         if (datetime.to_unix() >= 60 * 60) {
             duration_string = datetime.format("%T");
         } else {
             duration_string = datetime.format("%M:%S");
         }
-        
-        duration_label.set_text(duration_string);
+    
+        label.set_text(duration_string);
+    }
+
+    void update_times() {
+        set_label_time(duration_label, new GLib.DateTime.from_unix_utc((int64) Math.floor(_duration)));
+        set_label_time(time_played_label, new GLib.DateTime.from_unix_utc((int64) Math.floor(_time_pos)));
+
+        slider.set_value(_time_pos / _duration);
     }
 
     void update_play_button() {
@@ -236,6 +255,15 @@ public class VideoPlayer : Gtk.Overlay {
 
         mpv_ctx.observe_property (0, "pause", Mpv.Format.FLAG);
         mpv_ctx.observe_property (0, "duration", Mpv.Format.DOUBLE);
+
+        GLib.Timeout.add_seconds(1, () => {
+            double time = 0.0;
+            if (mpv_ctx.get_property("time-pos", Mpv.Format.DOUBLE, &time) == 0) {
+                video_controls.time_pos = time;
+            }
+
+            return true;
+        });
     }
 
     public void play(string name) {

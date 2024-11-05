@@ -336,6 +336,8 @@ namespace Mpv {
         public void set_wakeup_callback(WakeupCallbackFunc callback, void* userdata);
 
         public int observe_property(uint64 userdata, string name, Format format);
+
+        public int get_property(string name, Format format, void* data);
     }
 
     [CCode (cprefix = "MPV_EVENT_")]
